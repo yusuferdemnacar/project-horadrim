@@ -1,8 +1,8 @@
-from op.create import *
-from op.delete import *
-from op.filter import *
-from op.search import *
-from op.update import *
-from op.list import *
+from create import *
+from delete import *
+from filter import *
+from search import *
+from update import *
+from list import *
 
 print("hi from horadrim-software!")
