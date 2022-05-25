@@ -4,12 +4,14 @@ import os
 ## Fields are an array of strings/integers
 def insert_record(filename, fields):
 
-    dataFile = open("./db" + filename, "r+")
+    dataFile = open("./db/" + filename, "r+")
 
     ## Getting the available pages info from header
     dataFile.seek(25)
     availability = dataFile.read(1)
+    print(availability)
     availability = int(availability, 16)
+    print(availability)
 
     ## If there is no available pages, continue
     if availability == 0:
@@ -19,7 +21,8 @@ def insert_record(filename, fields):
 
     ## Getting the page to insert            
     pageToInsert = -1
-    availability = bin(availability)[2:]
+    availability = bin(availability)[2:].rjust(4, "0")
+    print(availability)
     for i in range(len(availability)):
         if availability[i] == "1":
             pageToInsert = i
@@ -31,26 +34,30 @@ def insert_record(filename, fields):
     availableLines = dataFile.read(2)
     availableLines = int(availableLines, 16)
     availableLines = bin(availableLines)[2:]
+    availableLines = availableLines.rjust(8, "0")
     
     lineToInsert = 0
-    for i in range(len(availableLines)):
-        if availableLines[i] == 1:
+    for i in range(8):
+        if availableLines[i] == "0":
             lineToInsert = i
             break
     
+    print("lti:", lineToInsert)
+    
     ## Setting the inserted line to occupied in page header
-    availableLines[lineToInsert] = 0
+
+    availableLines = availableLines[:lineToInsert] + "1" + availableLines[lineToInsert + 1:]
     
     ## Checking if the page will be full after insertion
     pageFilled = False
-    if availableLines == "00000000":
+    if availableLines == "11111111":
         pageFilled = True
     
     dataFile.seek(25)
 
     ## If the page is filled, change the file header so that it does not show in available pages
     if pageFilled:
-        availability[pageToInsert] = 0
+        availability = availability[:pageToInsert] + "0" + availability[pageToInsert + 1:]
         dataFile.write(hex(int(availability, 2))[2:])
 
     ## Increment the number of records
@@ -72,8 +79,6 @@ def insert_record(filename, fields):
 
     dataFile.close()
     return True
- 
-            
 
 def create_type(rel_name, field_count, pk_order, field_specs):
     
@@ -185,8 +190,6 @@ def create_record(type_name, fields):
         fileconf = open ("./db/filecon", "r+")
         fileconf.seek(index_position*23+20)
 
-        current_index = file_index
-
         file_index = int(file_index, 16)
         file_index = file_index + 1
         file_index = hex(file_index)
@@ -195,8 +198,8 @@ def create_record(type_name, fields):
         fileconf.write(file_index)
         fileconf.close()
 
-        create_file(current_index, type_name, field_count, pkOrder)
-        insert_record(type_name + "_" + current_index, fields)
+        create_file(file_index, type_name, field_count, int(pkOrder))
+        insert_record(type_name + "_" + file_index, fields)
 
     #### If there are existing files for this typename
     else:
@@ -228,8 +231,6 @@ def create_record(type_name, fields):
             fileconf = open ("./db/filecon", "r+")
             fileconf.seek(index_position*23+20)
 
-            current_index = file_index
-
             file_index = int(file_index, 16)
             file_index = file_index + 1
             file_index = hex(file_index)
@@ -239,12 +240,15 @@ def create_record(type_name, fields):
             fileconf.close()
 
             ## Creating a new file and then inserting the record
-            create_file(current_index, type_name, field_count, pkOrder)
+            create_file(file_index, type_name, field_count, int(pkOrder))
             
-            insert_record(type_name + "_" + current_index, fields)
+            insert_record(type_name + "_" + file_index, fields)
 
     return 0
 
 if(__name__ == "__main__"):
-
-    print(create_type("evil", 4, 1, [["name", "string"],["type", "string"],["alias", "string"],["spell", "string"]]))
+    
+    #print(create_type("evil", 4, 1, [["name", "string"],["type", "string"],["alias", "string"],["spell", "string"]]))
+    #print(create_record("evil", ["Nox", "Ghoul", "Spectre", "Paranoia"]))
+    for i in range(1):
+        print(create_record("evil", ["Ali", "LesserEvil", "Kaan", "Annoy"]))
