@@ -10,14 +10,11 @@ def delete_type(type_name):
     # Check which lines will be deleted from system catalog
     
     for i in range(len(lines)):
-        print(lines[i][20:40])
         if lines[i][20:40] == type_name.ljust(20):
             linesToDelete.append(i)
     
     # If the type does not exist in the system, return error
-    
-    print(linesToDelete)
-    
+
     if len(linesToDelete) == 0:
         return 1
         
