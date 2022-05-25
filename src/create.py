@@ -23,7 +23,7 @@ def create_type(rel_name, field_count, pk_order, field_specs):
         if(relation_name == rel_name):
             syscatf.close()
             return 1
-        i += 42+1
+        i += 43+1
     syscatf.close()
     
     # Add the new relation to the system catalog
