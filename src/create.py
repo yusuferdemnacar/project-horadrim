@@ -130,7 +130,6 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     create_file("000", rel_name, field_count, pk_order - 1)
     
     # Create the index file that will store the b plus tree
-    # fanout of the tree will be 4
     
     treef = open("./db/" + rel_name + "_tree", "w")
     treef.close
