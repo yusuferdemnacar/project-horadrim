@@ -69,40 +69,71 @@ for line in input_lines:
         
         if tokens[1] == "type":
         
+            # Prepare the arguments
+        
             field_specs = []
         
             for i in range(5, len(tokens) - 1, 2):
                 field_specs.append([tokens[i], tokens[i+1]])
+                
+            # Try to create type
             
             is_successful = create_type(tokens[2], int(tokens[3]), int(tokens[4]), field_specs)
             
+            # If a type is created, create a tree for it
+            
             if is_successful == 0:
             
-                # If a type is created, create a tree for it
-            
                 trees[tokens[2]] = BPlusTree(order=4)
+                
+            # Log the type creation
 
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
             
         elif tokens[1] == "record":
         
+            # Prepare the arguments
+        
             fields = []
         
             for i in range(3, len(tokens) - 1):
                 fields.append(tokens[i])
+                
+            # Try to create record
         
-            create_record(tokens[2], fields, trees)
+            is_successful = create_record(tokens[2], fields, trees)
+            
+            # Log the record creation
+            
+            logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+
         
     elif tokens[0] == "delete":
     
         if tokens[1] == "type":
+        
+            # Try to delete type
             
-            pass
+            is_successful = delete_type(tokens[2])
+            
+            # If a type is deleted, delete its tree
+            
+            if is_successful == 0:
+                
+                trees.pop(tokens[2])
+                
+            # Log the type deletion
+                
+            logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
             
         elif tokens[1] == "record":
         
-            pass
-    
+            # Try to delete record
+            
+            is_successful = delete_record(tokens[2], tokens[3], trees)
+            
+            logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+
     elif tokens[0] == "list":
     
         if tokens[1] == "type":
