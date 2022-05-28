@@ -59,7 +59,7 @@ def delete_record(type_name, primary_key):
     record_index = 0
     ## This variables hold the values returned from the B+ tree
     
-    dataFile = open("./db/" + type_name + "_" + file_index)
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
 
     ## Decrementing the amount of total records info from file header
     ## If there are 0 records left, delete the file

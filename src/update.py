@@ -6,7 +6,7 @@ def update_record(type_name, primary_key, fields):
     page_index = 0
     record_index = 0
 
-    dataFile = open("./db/" + type_name + "_" + file_index)
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
 
     ## If the number of fields are wrong, return an error
     dataFile.seek(23)
