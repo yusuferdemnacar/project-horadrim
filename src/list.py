@@ -18,6 +18,8 @@ def list_types(outputName):
     outfile = open(outputName, "a")
     for i in record_types:
         outfile.write(i.replace(" ","") + "\n")
+        
+    outfile.flush()
 
     return 0
 
@@ -79,6 +81,8 @@ def list_records(type_name, btrees, outputf):
     
     for value in valueList:
         outputf.write(" ".join(map(str, value)) + "\n")
+        
+    outputf.flush()
     
     return 0
 

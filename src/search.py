@@ -23,7 +23,7 @@ def search_record(type_name, primary_key, btrees, outputf):
     if address is None:
         return 1
 
-    ## I there is, get the address
+    ## If there is, get the address
     file_index = address[0][:3]
     page_index = int(address[0][3])
     record_index = int(address[0][4])
@@ -37,6 +37,7 @@ def search_record(type_name, primary_key, btrees, outputf):
     #### Write this value to the output ####
     values = fieldsString.split()
     outputf.write(" ".join(map(str, values)) + "\n")
+    outputf.flush()
     #### Write this value to the output ####
 
     return 0

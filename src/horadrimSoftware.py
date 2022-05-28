@@ -20,7 +20,7 @@ inputf.close()
 
 # Create the output file
 
-outputf = open(sys.argv[2], "w")
+outputf = open(sys.argv[2], "a")
 
 # Create the log file
 
@@ -89,6 +89,7 @@ for line in input_lines:
             # Log the type creation
 
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+            logf.flush()
             
         elif tokens[1] == "record":
         
@@ -96,7 +97,7 @@ for line in input_lines:
         
             fields = []
         
-            for i in range(3, len(tokens) - 1):
+            for i in range(3, len(tokens)):
                 fields.append(tokens[i])
                 
             # Try to create record
@@ -106,7 +107,7 @@ for line in input_lines:
             # Log the record creation
             
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
-
+            logf.flush()
         
     elif tokens[0] == "delete":
     
@@ -125,6 +126,7 @@ for line in input_lines:
             # Log the type deletion
                 
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+            logf.flush()
             
         elif tokens[1] == "record":
         
@@ -135,7 +137,8 @@ for line in input_lines:
             # Log the record deletion
             
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
-
+            logf.flush()
+            
     elif tokens[0] == "list":
     
         if tokens[1] == "type":
@@ -147,7 +150,7 @@ for line in input_lines:
             # Log the type listing
             
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
-
+            logf.flush()
             
         elif tokens[1] == "record":
         
@@ -158,6 +161,7 @@ for line in input_lines:
             # Log the record listing
             
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+            logf.flush()
 
     elif tokens[0] == "search":
     
@@ -168,11 +172,25 @@ for line in input_lines:
         # Log the record search
         
         logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
-
+        logf.flush()
 
     elif tokens[0] == "update":
     
-        pass
+        # Prepare the arguments
+
+        fields = []
+        
+        for i in range(4, len(tokens)):
+            fields.append(tokens[i])
+
+        # Try to update record
+        
+        is_successful = update_record(tokens[2], tokens[3], fields, trees)
+        
+        # Log the record update
+        
+        logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+        logf.flush()
         
     elif tokens[0] == "filter":
     

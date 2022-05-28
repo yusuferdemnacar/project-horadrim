@@ -1,10 +1,32 @@
-def update_record(type_name, primary_key, fields):
-    ## Get the file index, page index and record index
-    ## From the B+ Tree into the 3 following variables.
-    ## If unsuccessful, return 1
-    file_index = "000"
-    page_index = 0
-    record_index = 0
+def update_record(type_name, primary_key, fields, btrees):
+    
+    ## Get the type names from system catalog file
+    ## And insert them into the set record_types
+    syscatf = open("./db/syscat", "r")
+    lines = syscatf.readlines()
+    record_types = set()
+    for i in range(len(lines)):
+        if lines[i][20:40] != "systemCatalog".ljust(20):
+            record_types.add(lines[i][20:40].replace(" ",""))
+    syscatf.close()
+
+    ## If there is no type with given name, the operation is unsuccessful
+    if type_name not in record_types:
+        return 1
+        
+    ## Retrieve the address of the record
+        
+    address = btrees[type_name].retrieve(primary_key)
+    
+    ## If there is no such record, return 1
+    
+    if address is None:
+        return 1
+        
+    ## If there is, get the address
+    file_index = address[0][:3]
+    page_index = int(address[0][3])
+    record_index = int(address[0][4])
 
     dataFile = open("./db/" + type_name + "_" + file_index, "r+")
 
