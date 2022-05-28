@@ -51,9 +51,57 @@ def delete_type(type_name):
     
     return 0
 
-def delete_record():
+def delete_record(type_name, primary_key):
+    ## This part shall get the file index, page index and record index from the B+ Tree
+    ## If there is an error, the function shall return 1
+    file_index = "000"
+    page_index = 0
+    record_index = 0
+    ## This variables hold the values returned from the B+ tree
+    
+    dataFile = open("./db/" + type_name + "_" + file_index)
 
-    pass
+    ## Decrementing the amount of total records info from file header
+    ## If there are 0 records left, delete the file
+    dataFile.seek(26)
+    numOfRecords = dataFile.read(2)
+    numOfRecords = int(numOfRecords, 16)
+    numOfRecords = numOfRecords - 1
+    if numOfRecords == 0:
+        dataFile.close()
+        os.remove("./db/" + type_name + "_" + file_index)
+        return 0
+    numOfRecords = hex(numOfRecords)[2:].rjust(2, "0")
+    dataFile.seek(26)
+    dataFile.write(numOfRecords)
+
+    ## Modifying the available pages info if the page that 
+    ## We are going to delete from is full
+    dataFile.seek(25)
+    availablePages = dataFile.read(1)
+    availablePages = int(availablePages, 16)
+    availablePages = bin(availablePages)[2:].rjust(4, "0")
+    if availablePages[page_index] == 0:
+        availablePages = availablePages[:page_index] + "1" + availablePages[page_index + 1:]
+        dataFile.seek(25)
+        dataFile.write(hex(int(availablePages, 2))[2:])
+
+    ## Modifying the available lines from page header since
+    ## We are going to remove a record
+    dataFile.seek(29 + page_index*1931)
+    availableLines = dataFile.read(2)
+    availableLines = int(availableLines, 16)
+    availableLines = bin(availableLines)[2:]
+    availableLines = availableLines.rjust(8, "0")
+    availableLines = availableLines[record_index:] + "0" + availableLines[:record_index + 1]
+    dataFile.seek(29 + page_index*1931)
+    dataFile.write((hex(int(availableLines, 2))[2:]).rjust(2,"0"))
+
+    ## Overwriting the record with whitespaces
+    dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
+    dataFile.write(" " * 240)
+
+    return 0
 
 if __name__=="__main__":
     
