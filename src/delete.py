@@ -56,7 +56,7 @@ def delete_record(type_name, primary_key):
     record_index = 0
     ## This variables hold the values returned from the B+ tree
     
-    dataFile = open("./db/" + type_name + "_" + file_index)
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
 
     ## Decrementing the amount of total records info from file header
     ## If there are 0 records left, delete the file
@@ -90,7 +90,7 @@ def delete_record(type_name, primary_key):
     availableLines = int(availableLines, 16)
     availableLines = bin(availableLines)[2:]
     availableLines = availableLines.rjust(8, "0")
-    availableLines = availableLines[record_index:] + "0" + availableLines[:record_index + 1]
+    availableLines = availableLines[:record_index] + "0" + availableLines[record_index + 1:]
     dataFile.seek(29 + page_index*1931)
     dataFile.write((hex(int(availableLines, 2))[2:]).rjust(2,"0"))
 
@@ -102,4 +102,4 @@ def delete_record(type_name, primary_key):
 
 if __name__=="__main__":
     
-    print(delete_type("evil"))
+    print(delete_record("evil", "Nox"))

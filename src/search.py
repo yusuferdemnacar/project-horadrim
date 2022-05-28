@@ -9,7 +9,7 @@ def search_record(type_name, primary_key):
     page_index = 0
     record_index = 0
 
-    dataFile = open("./db/" + type_name + "_" + file_index)
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
 
     ## Remove the whitespaces and return the fields in order
     dataFile.seek(29 + page_index*1931 + 3 + record_index*241)

@@ -252,7 +252,7 @@ def create_record(type_name, fields):
     return 0
 
 if(__name__ == "__main__"):
-    
+
     #print(create_type("evil", 4, 1, [["name", "string"],["type", "string"],["alias", "string"],["spell", "string"]]))
     for i in range(1):
         print(create_record("evil", ["Noxar" + str(i), "Ghoul", "Spectre", "Paranoia"]))

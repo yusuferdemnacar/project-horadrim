@@ -36,15 +36,13 @@ def list_records(type_name):
         page_index = page_index_arr[i]
         record_index = record_index_arr[i]
 
-        dataFile = open("./db/" + type_name + "_" + file_index)
+        dataFile = open("./db/" + type_name + "_" + file_index, "r+")
         dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
         fieldsString = dataFile.read(240)
         valueList.append(fieldsString.split())
 
     #### Now the function must write the valueList array to the output file ####
     return 0
-
-    pass
 
 if __name__=="__main__":
 
