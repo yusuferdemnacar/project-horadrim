@@ -161,7 +161,10 @@ def create_record(type_name, fields, btrees):
     ## If there is no primary key somehow, return error
     if pkOrder == -1:
         return 1
-
+        
+    ## If a record with the primary key, return error
+    if btrees[type_name].retrieve(fields[int(pkOrder)]) is not None:
+        return 1
 
     ## Search for the files designated for the given type
     files = os.listdir("./db")
