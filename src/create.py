@@ -3,7 +3,7 @@ from bplustree import *
 import os
 
 ## Fields are an array of strings/integers
-def insert_record(filename, fields, pkOrder):
+def insert_record(filename, fields, pkOrder, btrees):
 
     dataFile = open("./db/" + filename, "r+")
 
@@ -75,10 +75,9 @@ def insert_record(filename, fields, pkOrder):
 
     dataFile.close()
     
-    ## Add the address to the B+ tree file of the type
-    treef = open("./db/" + filename[:-4] + "_tree", "a")
-    treef.write(fields[int(pkOrder)] + ":" + filename[-3:] + str(pageToInsert) + str(lineToInsert) + "\n")
-    treef.close()
+    ## insert record address into the tree
+    
+    btrees[filename[:-4]].insert(fields[int(pkOrder)], filename[-3:] + str(pageToInsert) + str(lineToInsert))
     
     return True
 
@@ -129,15 +128,10 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     
     create_file("000", rel_name, field_count, pk_order - 1)
     
-    # Create the index file that will store the b plus tree
-    
-    treef = open("./db/" + rel_name + "_tree", "w")
-    treef.close
-    
     return 0
 
 ## Fields are an array of strings/integers
-def create_record(type_name, fields):
+def create_record(type_name, fields, btrees):
 
     ## Check if the type exists
     ## If exists, get the primary key order
@@ -205,7 +199,7 @@ def create_record(type_name, fields):
         fileconf.close()
         
         create_file(file_index, type_name, field_count, int(pkOrder))
-        insert_record(type_name + "_" + file_index, fields, int(pkOrder))
+        insert_record(type_name + "_" + file_index, fields, int(pkOrder), btrees)
 
     #### If there are existing files for this typename
     else:
@@ -214,7 +208,7 @@ def create_record(type_name, fields):
         ## Checking and inserting if existing files are available for insertion
         for i in type_files:
             
-            spot_found = insert_record(i, fields, int(pkOrder))
+            spot_found = insert_record(i, fields, int(pkOrder), btrees)
             if spot_found:
                 break
         
@@ -247,7 +241,7 @@ def create_record(type_name, fields):
 
             ## Creating a new file and then inserting the record
             create_file(file_index, type_name, field_count, int(pkOrder))
-            insert_record(type_name + "_" + file_index, fields, int(pkOrder))
+            insert_record(type_name + "_" + file_index, fields, int(pkOrder), btrees)
 
     return 0
 
