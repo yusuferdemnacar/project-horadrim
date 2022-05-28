@@ -1,17 +1,16 @@
 from createFile import create_file
+from bplustree import *
 import os
 
 ## Fields are an array of strings/integers
-def insert_record(filename, fields):
+def insert_record(filename, fields, pkOrder):
 
     dataFile = open("./db/" + filename, "r+")
 
     ## Getting the available pages info from header
     dataFile.seek(25)
     availability = dataFile.read(1)
-    print(availability)
     availability = int(availability, 16)
-    print(availability)
 
     ## If there is no available pages, continue
     if availability == 0:
@@ -22,7 +21,6 @@ def insert_record(filename, fields):
     ## Getting the page to insert            
     pageToInsert = -1
     availability = bin(availability)[2:].rjust(4, "0")
-    print(availability)
     for i in range(len(availability)):
         if availability[i] == "1":
             pageToInsert = i
@@ -41,8 +39,6 @@ def insert_record(filename, fields):
         if availableLines[i] == "0":
             lineToInsert = i
             break
-    
-    print("lti:", lineToInsert)
     
     ## Setting the inserted line to occupied in page header
 
@@ -78,6 +74,12 @@ def insert_record(filename, fields):
         dataFile.write(i.ljust(20))
 
     dataFile.close()
+    
+    ## Add the address to the B+ tree file of the type
+    treef = open("./db/" + filename[:-4] + "_tree", "a")
+    treef.write(fields[int(pkOrder)] + ":" + filename[-3:] + str(pageToInsert) + str(lineToInsert) + "\n")
+    treef.close()
+    
     return True
 
 def create_type(rel_name, field_count, pk_order, field_specs):
@@ -125,7 +127,13 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     
     # Create the first file for the newly created relation
     
-    create_file("000", rel_name, field_count, pk_order)
+    create_file("000", rel_name, field_count, pk_order - 1)
+    
+    # Create the index file that will store the b plus tree
+    # fanout of the tree will be 4
+    
+    treef = open("./db/" + rel_name + "_tree", "w")
+    treef.close
     
     return 0
 
@@ -152,7 +160,7 @@ def create_record(type_name, fields):
 
     field_count = len(typeSyscatLines)
     pkOrder = -1
-    for line in syscatLines:
+    for line in typeSyscatLines:
         if line[42:43] == "p":
             pkOrder = line[41:42]
             break
@@ -166,10 +174,9 @@ def create_record(type_name, fields):
     files = os.listdir("./db")
     type_files = []
     for i in files:
-        if (type_name + "_") in i:
+        if ((type_name + "_") in i) and ("tree" not in i[i.index("_") + 1:]):
             type_files.append(i)
-
-    
+            
     #### If there are no files for the record
 
     ## Get the next file index from filecon
@@ -187,7 +194,7 @@ def create_record(type_name, fields):
 
         
         ## Incrementing file index
-        fileconf = open ("./db/filecon", "r+")
+        fileconf = open("./db/filecon", "r+")
         fileconf.seek(index_position*23+20)
 
         file_index = int(file_index, 16)
@@ -197,9 +204,9 @@ def create_record(type_name, fields):
 
         fileconf.write(file_index)
         fileconf.close()
-
+        
         create_file(file_index, type_name, field_count, int(pkOrder))
-        insert_record(type_name + "_" + file_index, fields)
+        insert_record(type_name + "_" + file_index, fields, int(pkOrder))
 
     #### If there are existing files for this typename
     else:
@@ -208,7 +215,7 @@ def create_record(type_name, fields):
         ## Checking and inserting if existing files are available for insertion
         for i in type_files:
             
-            spot_found = insert_record(i, fields)
+            spot_found = insert_record(i, fields, int(pkOrder))
             if spot_found:
                 break
         
@@ -241,14 +248,12 @@ def create_record(type_name, fields):
 
             ## Creating a new file and then inserting the record
             create_file(file_index, type_name, field_count, int(pkOrder))
-            
-            insert_record(type_name + "_" + file_index, fields)
+            insert_record(type_name + "_" + file_index, fields, int(pkOrder))
 
     return 0
 
 if(__name__ == "__main__"):
     
     #print(create_type("evil", 4, 1, [["name", "string"],["type", "string"],["alias", "string"],["spell", "string"]]))
-    #print(create_record("evil", ["Nox", "Ghoul", "Spectre", "Paranoia"]))
     for i in range(1):
-        print(create_record("evil", ["Ali", "LesserEvil", "Kaan", "Annoy"]))
+        print(create_record("evil", ["Noxar" + str(i), "Ghoul", "Spectre", "Paranoia"]))

@@ -1,5 +1,6 @@
-# Edited version of the code from 
+# Edited version of the code from
 # https://github.com/Ashwin-op/B_and_Bplus_Tree/blob/master/B-Plus-Tree.py
+# Found by searching for B+ tree python implementations on GitHub
 
 from __future__ import annotations
 
