@@ -58,10 +58,10 @@ def delete_record(type_name, primary_key, btrees):
     
     if address is None:
         return 1
-    
-    file_index = address[:3]
-    page_index = int(address[3])
-    record_index = int(address[4])
+
+    file_index = address[0][:3]
+    page_index = int(address[0][3])
+    record_index = int(address[0][4])
     ## This variables hold the values returned from the B+ tree
     
     dataFile = open("./db/" + type_name + "_" + file_index, "r+")

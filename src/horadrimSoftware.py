@@ -142,7 +142,7 @@ for line in input_lines:
             
             # Try to list types
             
-            is_successful = list_types(argv[2])
+            is_successful = list_types(sys.argv[2])
             
             # Log the type listing
             
@@ -159,11 +159,16 @@ for line in input_lines:
             
             logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
 
-
-    
     elif tokens[0] == "search":
     
-        pass
+        # Try to search record
+    
+        is_successful = search_record(tokens[2], tokens[3], trees, outputf)
+        
+        # Log the record search
+        
+        logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+
 
     elif tokens[0] == "update":
     

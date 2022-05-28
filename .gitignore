@@ -1,4 +1,5 @@
-input*.txt
-output*.txt
+input
+output
 __pycache__
 db
+horadrimLog.csv
