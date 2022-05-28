@@ -6,7 +6,3 @@ ispk                systemCatalog       s4n
 color               potion              s0n
 name                potion              s1p
 effect              potion              s2n
-name                evil                s0p
-type                evil                s1n
-alias               evil                s2n
-spell               evil                s3n

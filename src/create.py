@@ -152,7 +152,7 @@ def create_record(type_name, fields):
 
     field_count = len(typeSyscatLines)
     pkOrder = -1
-    for line in syscatLines:
+    for line in typeSyscatLines:
         if line[42:43] == "p":
             pkOrder = line[41:42]
             break
