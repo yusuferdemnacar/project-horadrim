@@ -111,6 +111,7 @@ class BPlusTree(object):
 
     @staticmethod
     def _find(node: Node, key):
+        
         for i, item in enumerate(node.keys):
             if key < item:
                 return node.values[i], i
@@ -298,11 +299,11 @@ class BPlusTree(object):
 
         while node:
             for pair_index in range(node.getSize()):
-                bplustreef.write(node.keys[pair_index] + ":" + node.values[pair_index][0] + "\n")
+                bplustreef.write(str(node.keys[pair_index]) + ":" + node.values[pair_index][0] + "\n")
 
             node = node.nextLeaf
             
-    def deserializeTree(self, rel_name):
+    def deserializeTree(self, rel_name, field_type):
     
         # Read the tree file with the given name and construct the tree by inserting the key-value pairs
     
@@ -311,7 +312,11 @@ class BPlusTree(object):
         pairs = bplustreef.readlines()
         
         for pair in pairs:
-            self.insert(pair[:pair.index(":")], pair[pair.index(":") + 1:pair.index("\n")])
+            if field_type == "s":
+                self.insert(pair[:pair.index(":")], pair[pair.index(":") + 1:pair.index("\n")])
+            else:
+                self.insert(int(pair[:pair.index(":")]), pair[pair.index(":") + 1:pair.index("\n")])
+
 
 if __name__ == '__main__':
     

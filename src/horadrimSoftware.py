@@ -52,14 +52,26 @@ if not os.path.exists("./db/syscat"):
     
     syscatf.close()
 
+# Read the syscat to get primary field types for tree reconstruction
+
+syscatf = open("./db/syscat", "r")
+syscatlines = syscatf.read().splitlines()
+
+pk_field_types = {}
+
+for syscatline in syscatlines:
+    if syscatline[42] == "p":
+        pk_field_types[syscatline[20:40].replace(" ", "")] = syscatline[40]
+
 # Open the tree files and reconstruct the trees
 
 dbfiles = os.listdir("./db")
 for file in dbfiles:
     if "_tree" in file:
         typename = file[:file.index("_")]
+        field_type = pk_field_types[typename]
         trees[typename] = BPlusTree(order=4)
-        trees[typename].deserializeTree(typename)
+        trees[typename].deserializeTree(typename, field_type)
     
 for line in input_lines:
     
@@ -194,7 +206,14 @@ for line in input_lines:
         
     elif tokens[0] == "filter":
     
-        pass
+        # Try to filter records
+    
+        is_successful = filter_records(tokens[2], tokens[3], trees, outputf)
+        
+        # Log the filtering
+        
+        logf.write(str(int(time.time())) + "," + line + "," + ("success" if is_successful == 0 else "failure") + "\n")
+        logf.flush()
 
 # Save the trees in files
 

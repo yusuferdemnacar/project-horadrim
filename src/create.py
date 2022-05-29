@@ -3,7 +3,9 @@ from bplustree import *
 import os
 
 ## Fields are an array of strings/integers
-def insert_record(filename, fields, pkOrder, btrees):
+def insert_record(filename, fields, pkOrder, btrees, pk_field_type):
+    
+    
 
     dataFile = open("./db/" + filename, "r+")
 
@@ -77,7 +79,13 @@ def insert_record(filename, fields, pkOrder, btrees):
     
     ## insert record address into the tree
     
-    btrees[filename[:-4]].insert(fields[int(pkOrder)], filename[-3:] + str(pageToInsert) + str(lineToInsert))
+    if pk_field_type == "s":
+    
+        btrees[filename[:-4]].insert(fields[int(pkOrder)], filename[-3:] + str(pageToInsert) + str(lineToInsert))
+    
+    else:
+    
+        btrees[filename[:-4]].insert(int(fields[int(pkOrder)]), filename[-3:] + str(pageToInsert) + str(lineToInsert))
     
     return True
 
@@ -86,7 +94,7 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     # Replace "string" with "s" and "integer" with "i" in field_specs
     
     for field_spec in field_specs:
-        if field_spec[1] == "string":
+        if field_spec[1] == "str":
             field_spec[1] = "s"
         else:
             field_spec[1] = "i"
@@ -153,9 +161,11 @@ def create_record(type_name, fields, btrees):
 
     field_count = len(typeSyscatLines)
     pkOrder = -1
+    pk_field_type = ""
     for line in typeSyscatLines:
         if line[42:43] == "p":
             pkOrder = line[41:42]
+            pk_field_type = line[40]
             break
 
     ## If there is no primary key somehow, return error
@@ -163,8 +173,12 @@ def create_record(type_name, fields, btrees):
         return 1
         
     ## If a record with the primary key, return error
-    if btrees[type_name].retrieve(fields[int(pkOrder)]) is not None:
-        return 1
+    if pk_field_type == "s":
+        if btrees[type_name].retrieve(fields[int(pkOrder)]) is not None:
+            return 1
+    else:
+        if btrees[type_name].retrieve(int(fields[int(pkOrder)])) is not None:
+            return 1
 
     ## Search for the files designated for the given type
     files = os.listdir("./db")
@@ -202,7 +216,7 @@ def create_record(type_name, fields, btrees):
         fileconf.close()
         
         create_file(file_index, type_name, field_count, int(pkOrder))
-        insert_record(type_name + "_" + file_index, fields, int(pkOrder), btrees)
+        insert_record(type_name + "_" + file_index, fields, int(pkOrder), btrees, pk_field_type)
 
     #### If there are existing files for this typename
     else:
@@ -211,7 +225,7 @@ def create_record(type_name, fields, btrees):
         ## Checking and inserting if existing files are available for insertion
         for i in type_files:
             
-            spot_found = insert_record(i, fields, int(pkOrder), btrees)
+            spot_found = insert_record(i, fields, int(pkOrder), btrees, pk_field_type)
             if spot_found:
                 break
         
@@ -244,7 +258,7 @@ def create_record(type_name, fields, btrees):
 
             ## Creating a new file and then inserting the record
             create_file(file_index, type_name, field_count, int(pkOrder))
-            insert_record(type_name + "_" + file_index, fields, int(pkOrder), btrees)
+            insert_record(type_name + "_" + file_index, fields, int(pkOrder), btrees, pk_field_type)
 
     return 0
 
