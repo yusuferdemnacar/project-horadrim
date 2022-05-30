@@ -48,12 +48,20 @@ def delete_type(type_name):
     
     return 0
 
-def delete_record(type_name, primary_key):
-    ## This part shall get the file index, page index and record index from the B+ Tree
+def delete_record(type_name, primary_key, btrees):
+    
     ## If there is an error, the function shall return 1
-    file_index = "000"
-    page_index = 0
-    record_index = 0
+    
+    ## Retrieve the address of the record, if there is no record, return 1
+
+    address = btrees[type_name].retrieve(primary_key)
+    
+    if address is None:
+        return 1
+
+    file_index = address[0][:3]
+    page_index = int(address[0][3])
+    record_index = int(address[0][4])
     ## This variables hold the values returned from the B+ tree
     
     dataFile = open("./db/" + type_name + "_" + file_index, "r+")
@@ -97,6 +105,10 @@ def delete_record(type_name, primary_key):
     ## Overwriting the record with whitespaces
     dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
     dataFile.write(" " * 240)
+    
+    ## Remove the record from the tree
+    
+    btrees[type_name].delete(primary_key)
 
     return 0
 
