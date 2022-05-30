@@ -38,9 +38,14 @@ def update_record(type_name, primary_key, fields, btrees):
         return 1
 
     ## Overwriting the record with the new fields
-    dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
+    fieldsString = ""
     for i in fields:
-        dataFile.write(i.ljust(20))
+        fieldsString = fieldsString + i.ljust(20)
+    dataFile.seek(29 + page_index*1931 + 3)
+    page_contents = dataFile.read(1928)
+    page_contents = page_contents[:241*record_index] + fieldsString + page_contents[241*record_index + len(fields)*20:]
+    dataFile.seek(29 + page_index*1931 + 3)
+    dataFile.write(page_contents)
 
     dataFile.close()
     return 0

@@ -103,8 +103,11 @@ def delete_record(type_name, primary_key, btrees):
     dataFile.write((hex(int(availableLines, 2))[2:]).rjust(2,"0"))
 
     ## Overwriting the record with whitespaces
-    dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
-    dataFile.write(" " * 240)
+    dataFile.seek(29 + page_index*1931 + 3)
+    page_contents = dataFile.read(1928)
+    page_contents = page_contents[:record_index*241] + " " * 240 + page_contents[record_index*241 + 240:]
+    dataFile.seek(29 + page_index*1931 + 3)
+    dataFile.write(page_contents)
     
     ## Remove the record from the tree
     

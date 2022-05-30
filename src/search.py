@@ -31,8 +31,9 @@ def search_record(type_name, primary_key, btrees, outputf):
     dataFile = open("./db/" + type_name + "_" + file_index, "r+", newline="")
 
     ## Remove the whitespaces and return the fields in order
-    dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
-    fieldsString = dataFile.read(240)
+    dataFile.seek(29 + page_index*1931 + 3)
+    page_contents = dataFile.read(1928)
+    fieldsString = page_contents[record_index*241 : record_index*241 + 240]
     
     #### Write this value to the output ####
     values = fieldsString.split()
