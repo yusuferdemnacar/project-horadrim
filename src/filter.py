@@ -5,7 +5,7 @@ def filter_records(type_name, condition, trees, outputf):
     ## Check if the type exists
     ## If exists, get the primary key type
 
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     syscatLines = syscatf.readlines()
     syscatf.close()
 
@@ -120,7 +120,7 @@ def filter_records(type_name, condition, trees, outputf):
         page_index = page_index_arr[i]
         record_index = record_index_arr[i]
 
-        dataFile = open("./db/" + type_name + "_" + file_index, "r+")
+        dataFile = open("./db/" + type_name + "_" + file_index, "r+", newline="")
         dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
         fieldsString = dataFile.read(240)
         valueList.append(fieldsString.split())

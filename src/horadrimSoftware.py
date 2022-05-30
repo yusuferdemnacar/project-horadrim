@@ -12,7 +12,7 @@ import time
 
 # Read the input file
 
-inputf = open(sys.argv[1], "r")
+inputf = open(sys.argv[1], "r", newline="")
 
 input_lines = inputf.read().splitlines()
 
@@ -20,11 +20,11 @@ inputf.close()
 
 # Create the output file
 
-outputf = open(sys.argv[2], "a")
+outputf = open(sys.argv[2], "a", newline="")
 
 # Create the log file
 
-logf = open("horadrimLog.csv", "a")
+logf = open("horadrimLog.csv", "a", newline="")
 
 # Dictionary for the tree objects
 
@@ -40,7 +40,7 @@ if not os.path.exists("./db"):
 
 if not os.path.exists("./db/syscat"):
 
-    syscatf = open("./db/syscat", "w")
+    syscatf = open("./db/syscat", "w", newline="")
 
     # write the metadata for the syscat table itself
 
@@ -54,7 +54,7 @@ if not os.path.exists("./db/syscat"):
 
 # Read the syscat to get primary field types for tree reconstruction
 
-syscatf = open("./db/syscat", "r")
+syscatf = open("./db/syscat", "r", newline="")
 syscatlines = syscatf.read().splitlines()
 
 pk_field_types = {}

@@ -1,6 +1,6 @@
 def create_file(file_index, rel_name, field_count, pk_order):
 
-    newf = open("./db/" + rel_name + "_" + file_index, "w")
+    newf = open("./db/" + rel_name + "_" + file_index, "w", newline="")
     
     newf.write(file_index + rel_name.ljust(20) + hex(field_count)[2:] + hex(pk_order)[2:] + "f00" + "\n")
     

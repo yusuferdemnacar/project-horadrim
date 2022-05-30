@@ -2,7 +2,7 @@ def update_record(type_name, primary_key, fields, btrees):
     
     ## Get the type names from system catalog file
     ## And insert them into the set record_types
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     lines = syscatf.readlines()
     record_types = set()
     for i in range(len(lines)):
@@ -28,7 +28,7 @@ def update_record(type_name, primary_key, fields, btrees):
     page_index = int(address[0][3])
     record_index = int(address[0][4])
 
-    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+", newline="")
 
     ## If the number of fields are wrong, return an error
     dataFile.seek(23)

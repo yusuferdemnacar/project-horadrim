@@ -2,7 +2,7 @@ def search_record(type_name, primary_key, btrees, outputf):
     
     ## Get the type names from system catalog file
     ## And insert them into the set record_types
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     lines = syscatf.readlines()
     record_types = set()
     for i in range(len(lines)):
@@ -28,7 +28,7 @@ def search_record(type_name, primary_key, btrees, outputf):
     page_index = int(address[0][3])
     record_index = int(address[0][4])
 
-    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+", newline="")
 
     ## Remove the whitespaces and return the fields in order
     dataFile.seek(29 + page_index*1931 + 3 + record_index*241)

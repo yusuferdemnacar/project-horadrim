@@ -2,7 +2,7 @@ def list_types(outputName):
 
     ## Get the type names from system catalog file
     ## And insert them into the set record_types
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     lines = syscatf.readlines()
     record_types = set()
     for i in range(len(lines)):
@@ -15,7 +15,7 @@ def list_types(outputName):
         return 1
 
     ## Printing the types to the output file
-    outfile = open(outputName, "a")
+    outfile = open(outputName, "a", newline="")
     for i in record_types:
         outfile.write(i.replace(" ","") + "\n")
         
@@ -27,7 +27,7 @@ def list_records(type_name, btrees, outputf):
     
     ## Get the type names from system catalog file
     ## And insert them into the set record_types
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     lines = syscatf.readlines()
     record_types = set()
     for i in range(len(lines)):
@@ -72,7 +72,7 @@ def list_records(type_name, btrees, outputf):
         page_index = page_index_arr[i]
         record_index = record_index_arr[i]
 
-        dataFile = open("./db/" + type_name + "_" + file_index, "r+")
+        dataFile = open("./db/" + type_name + "_" + file_index, "r+", newline="")
         dataFile.seek(29 + page_index*1931 + 3 + record_index*241)
         fieldsString = dataFile.read(240)
         valueList.append(fieldsString.split())

@@ -7,7 +7,7 @@ def insert_record(filename, fields, pkOrder, btrees, pk_field_type):
     
     
 
-    dataFile = open("./db/" + filename, "r+")
+    dataFile = open("./db/" + filename, "r+", newline="")
 
     ## Getting the available pages info from header
     dataFile.seek(25)
@@ -102,7 +102,7 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     # Check the system catalog if there is a relation with the given name
     # Return 1 if there is a relation with the given name
 
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     
     i=20
     relation_name = "#"
@@ -117,7 +117,7 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     
     # Add the new relation to the system catalog
     
-    syscatf = open("./db/syscat", "a")
+    syscatf = open("./db/syscat", "a", newline="")
     for i in range(field_count):
         if(i + 1 == pk_order):
             pk_status = "p"
@@ -129,7 +129,7 @@ def create_type(rel_name, field_count, pk_order, field_specs):
     # Create filecon if not exists,
     # Add relation to filecon
     
-    fileconf = open("./db/filecon", "a")
+    fileconf = open("./db/filecon", "a", newline="")
     fileconf.write(rel_name.ljust(20) + "000\n")
     
     # Create the first file for the newly created relation
@@ -144,7 +144,7 @@ def create_record(type_name, fields, btrees):
     ## Check if the type exists
     ## If exists, get the primary key order
 
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     syscatLines = syscatf.readlines()
     syscatf.close()
 
@@ -191,7 +191,7 @@ def create_record(type_name, fields, btrees):
 
     ## Get the next file index from filecon
     if len(type_files) == 0:
-        fileconf = open("./db/filecon", "r")
+        fileconf = open("./db/filecon", "r", newline="")
         fileconfLines = fileconf.readlines()
         fileconf.close()
         file_index = "000"
@@ -204,7 +204,7 @@ def create_record(type_name, fields, btrees):
 
         
         ## Incrementing file index
-        fileconf = open("./db/filecon", "r+")
+        fileconf = open("./db/filecon", "r+", newline="")
         fileconf.seek(index_position*23+20)
 
         file_index = int(file_index, 16)
@@ -232,7 +232,7 @@ def create_record(type_name, fields, btrees):
         ## If there are no empty spaces in existing files
         ## Then create a new file
         if not spot_found:
-            fileconf = open("./db/filecon", "r")
+            fileconf = open("./db/filecon", "r", newline="")
             fileconfLines = fileconf.readlines()
             fileconf.close()
             file_index = "000"
@@ -245,7 +245,7 @@ def create_record(type_name, fields, btrees):
 
             
             ## Incrementing file index
-            fileconf = open ("./db/filecon", "r+")
+            fileconf = open ("./db/filecon", "r+", newline="")
             fileconf.seek(index_position*23+20)
 
             file_index = int(file_index, 16)
