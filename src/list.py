@@ -1,6 +1,3 @@
-from dataclasses import fields
-
-
 def list_types(outputName):
 
     ## Get the type names from system catalog file
@@ -16,13 +13,16 @@ def list_types(outputName):
     ## If there is no type, the operation is unsuccessful
     if len(record_types) == 0:
         return 1
+        
+    ## sort the record types
+    record_types = list(record_types)
+    record_types.sort()
 
     ## Printing the types to the output file
     outfile = open(outputName, "a", newline="")
     for i in record_types:
         outfile.write(i.replace(" ","") + "\n")
-        
-    outfile.flush()
+        outfile.flush()
 
     return 0
 
@@ -84,8 +84,7 @@ def list_records(type_name, btrees, outputf):
     #### Now the function must write the valueList array to the output file ####
     for value in valueList:
         outputf.write(" ".join(map(str, value)) + "\n")
-        
-    outputf.flush()
+        outputf.flush()
     
     return 0
 
