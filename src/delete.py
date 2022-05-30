@@ -2,7 +2,7 @@ import os
 
 def delete_type(type_name):
 
-    syscatf = open("./db/syscat", "r")
+    syscatf = open("./db/syscat", "r", newline="")
     lines = syscatf.readlines()
     syscatf.close()
     linesToDelete = []
@@ -20,7 +20,7 @@ def delete_type(type_name):
         
     # Deleting the lines for the type from system catalog
     
-    syscatf = open("./db/syscat", "w")
+    syscatf = open("./db/syscat", "w", newline="")
     for i in range(len(lines)):
         if i not in linesToDelete:
             syscatf.write(lines[i])
@@ -34,11 +34,11 @@ def delete_type(type_name):
 
     # Deleting the info of this type in filecon
     
-    fileconf = open("./db/filecon", "r")
+    fileconf = open("./db/filecon", "r", newline="")
     lines = fileconf.readlines()
     fileconf.close()
          
-    fileconf = open("./db/filecon", "w")
+    fileconf = open("./db/filecon", "w", newline="")
     
     for line in lines:
         if line[0:20] != type_name.ljust(20):
@@ -64,7 +64,7 @@ def delete_record(type_name, primary_key, btrees):
     record_index = int(address[0][4])
     ## This variables hold the values returned from the B+ tree
     
-    dataFile = open("./db/" + type_name + "_" + file_index, "r+")
+    dataFile = open("./db/" + type_name + "_" + file_index, "r+", newline="")
 
     ## Decrementing the amount of total records info from file header
     ## If there are 0 records left, delete the file

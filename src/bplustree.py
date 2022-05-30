@@ -291,7 +291,7 @@ class BPlusTree(object):
     
         # Print the leaf node key-value pairs of the tree into a file with the given relation name
     
-        bplustreef = open("./db/" + rel_name + "_tree", "w")
+        bplustreef = open("./db/" + rel_name + "_tree", "w", newline="")
     
         node = self.getLeftmostLeaf()
         if not node:
@@ -307,7 +307,7 @@ class BPlusTree(object):
     
         # Read the tree file with the given name and construct the tree by inserting the key-value pairs
     
-        bplustreef = open("./db/" + rel_name + "_tree", "r")
+        bplustreef = open("./db/" + rel_name + "_tree", "r", newline="")
         
         pairs = bplustreef.readlines()
         
