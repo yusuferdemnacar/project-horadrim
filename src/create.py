@@ -184,7 +184,7 @@ def create_record(type_name, fields, btrees):
     files = os.listdir("./db")
     type_files = []
     for i in files:
-        if ((type_name + "_") in i) and ("tree" not in i[i.index("_") + 1:]):
+        if (i.startswith(type_name + "_")) and ("tree" not in i[i.index("_") + 1:]):
             type_files.append(i)
             
     #### If there are no files for the record

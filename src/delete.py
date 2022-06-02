@@ -29,7 +29,7 @@ def delete_type(type_name):
     
     files = os.listdir("./db")
     for i in files:
-        if (type_name + "_") in i:
+        if i.startswith(type_name + "_"):
             os.remove("./db/" + i)
 
     # Deleting the info of this type in filecon
