@@ -1,2 +1,3 @@
-# project-horadrim
-CmpE321 Project 4 - Project Horadrim
+Run the following command in the src directory, the paths must be absolute paths for inputFile and outputFile.
+
+python horadrimSoftware.py \<inputFilePath\> \<outputFilePath\>
